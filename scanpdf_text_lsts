@@ -1,0 +1,24 @@
+import os
+from wand.image import Image
+
+cwd = os.getcwd()  # Get the current working directory (cwd)
+files = os.listdir(cwd)  # Get all the files in that directory
+
+pdf_file = 'C:\\Users\\lstsuser03\\Documents\\My Python Projects\\rental.pdf'
+ 
+files = []
+with(Image(filename=pdf_file, resolution = 500)) as conn: 
+    for index, image in enumerate(conn.sequence):
+        image_name = os.path.splitext(pdf_file)[0] + str(index + 1) + '.png'
+        Image(image).save(filename = image_name)
+        files.append(image_name)
+        
+from PIL import Image
+import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\lstsuser03\AppData\Local\Tesseract-OCR\\tesseract.exe'
+
+all_text = []
+for file in files:
+    text = pytesseract.image_to_string(Image.open(file))
+    all_text.append(text)
+    print(text)
