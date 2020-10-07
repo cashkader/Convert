@@ -1,0 +1,14 @@
+import os, pandas as pd
+
+path = r'C:\Users\Markos\MyPythonScripts'
+file_name = 'Apple.txt'
+os.chdir(path)
+
+df = pd.read_csv(file_name, sep='\t', index_col=False, header=None)
+# Here you can delete the dataframe collumns you dont want!
+dfnan = df.isnull().values.all(axis=0)
+nanpos = [i for i, j in enumerate(dfnan) if not j]
+col_names = ['Transaction Date', 'Settlement Date', 'Apple Identifier', 'SKU Title', 'Developer Name', 'Product', 'Type Identifier', 'Country of Sale', 'Quantity', 'Partner Share', 'Extended Partner Share', 'Partner Share Currency', 'Customer Price', 'Customer Currency', 'Sale or Return', 'Promo Code', 'Order Type', 'Region']
+col_names = [j for i, j in enumerate(col_names) if i in nanpos]
+df = df[nanpos]
+df.columns = col_names
