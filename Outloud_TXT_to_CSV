@@ -12,3 +12,5 @@ col_names = ['Transaction Date', 'Settlement Date', 'Apple Identifier', 'SKU Tit
 col_names = [j for i, j in enumerate(col_names) if i in nanpos]
 df = df[nanpos]
 df.columns = col_names
+
+df.to_excel('Apple.xlsx', index=False)
