@@ -1,0 +1,17 @@
+import pdfplumber, os, re
+
+directory = 
+os.chdir(directory)
+
+vies_list = []
+for file in os.listdir(directory):
+    if not file.endswith(".pdf"):
+        continue
+    with open(os.path.join(directory,file), 'rb') as pdfFileObj:  # Changes here
+        with pdfplumber.open(file) as pdf:
+            page = pdf.pages[0]
+            text = page.extract_text()
+            vat = re.search("VAT no.: ?(?P<vat>\S+) ", text).group("vat")
+            amount = re.search("Summary\s+(?P<amount>\d\d\.\d\d) ", text).group("amount")
+            vies_sale = (vat, amount)
+            vies_list.append(vies_sale)
