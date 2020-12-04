@@ -1,4 +1,5 @@
 import pdfplumber, os, re
+import pandas as pd
 
 directory = 
 os.chdir(directory)
@@ -15,3 +16,6 @@ for file in os.listdir(directory):
             amount = re.search("Summary\s+(?P<amount>\d\d\.\d\d) ", text).group("amount")
             vies_sale = (vat, amount)
             vies_list.append(vies_sale)
+            
+df = pd.DataFrame(vies_list, columns =['VAT No', 'Amount']) 
+df.to_excel (r'VIES.xlsx', index = False, header=True)
