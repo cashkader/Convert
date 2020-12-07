@@ -20,12 +20,23 @@ for file in os.listdir(directory):
             
 df = pd.DataFrame(vies_list, columns =['Name', 'VAT', 'Amount']) 
 # df.to_excel (r'VIES.xlsx', index = False, header=True)
-# df.drop(df.index[], inplace=True)
-# df['VAT'] = df['VAT'].str.upper()
-df['Amount'] = df['Amount'].astype(float)
-df = df.groupby(['VAT'], as_index=False).agg({'Name': 'first', 'Amount': 'sum'})
-df['Rounded'] = df['Amount'].round().astype(int)
+# df.drop(df.index[], inplace=True) # Drop VAT wrong VAT codes
+# df['VAT'] = df['VAT'].str.upper() # Uppercase all VAT codes if needed
+df['Amount'] = df['Amount'].astype(float) # Transform amount to numbers
+df = df.groupby(['VAT'], as_index=False).agg({'Name': 'first', 'Amount': 'sum'}) 
+df['Rounded'] = df['Amount'].round().astype(int) # Round the amounts
 df['VAT_Country'] = df['VAT'].str[0:2]
 df['VAT_No'] = df['VAT'].str[2:]
 total_rows = df['Rounded'].count()
 total_amount = df['Rounded'].sum()
+
+# Create the xml text
+xml_text = ''
+for i in range(total_rows):
+    temp = f"""<mof:row number="{total_rows - i}">
+<mof:vat-number country="{df.loc[total_rows-i-1,'VAT_Country']}">{df.loc[total_rows-i-1,'VAT_No']}</mof:vat-number>
+<mof:supplies-amount />
+<mof:triangle-transactions-amount />
+<mof:services-amount>{df.loc[total_rows-i-1,'Rounded']}</mof:services-amount>
+</mof:row>\n"""
+    xml_text += temp
