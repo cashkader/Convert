@@ -28,4 +28,4 @@ df['Rounded'] = df['Amount'].round().astype(int)
 df['VAT_Country'] = df['VAT'].str[0:2]
 df['VAT_No'] = df['VAT'].str[2:]
 total_rows = df['Rounded'].count()
-sum_amount = df['Rounded'].sum()
+total_amount = df['Rounded'].sum()
