@@ -19,7 +19,7 @@ for file in os.listdir(directory):
             vies_list.append(vies_sale)
             
 df = pd.DataFrame(vies_list, columns =['Name', 'VAT', 'Amount']) 
-# df.to_excel (r'VIES.xlsx', index = False, header=True)
+df
 # df.drop(df.index[], inplace=True) # Drop VAT wrong VAT codes
 # df['VAT'] = df['VAT'].str.upper() # Uppercase all VAT codes if needed
 df['Amount'] = df['Amount'].astype(float) # Transform amount to numbers
@@ -29,6 +29,7 @@ df['VAT_Country'] = df['VAT'].str[0:2]
 df['VAT_No'] = df['VAT'].str[2:]
 total_rows = df['Rounded'].count()
 total_amount = df['Rounded'].sum()
+# df.to_excel (r'VIES.xlsx', index = False, header=True)
 
 # Create the xml text
 xml_text = ''
