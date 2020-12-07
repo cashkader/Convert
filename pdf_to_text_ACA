@@ -25,3 +25,5 @@ df = pd.DataFrame(vies_list, columns =['Name', 'VAT', 'Amount'])
 df['Amount'] = df['Amount'].astype(float)
 df = df.groupby(['VAT'], as_index=False).agg({'Name': 'first', 'Amount': 'sum'})
 df['Rounded'] = df['Amount'].round().astype(int)
+df['VAT_Country'] = df['VAT'].str[0:2]
+df['VAT_No'] = df['VAT'].str[2:]
