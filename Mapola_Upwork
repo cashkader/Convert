@@ -1,0 +1,26 @@
+import pdfplumber, os, re, pandas as pd
+from datetime import datetime
+
+directory = 
+os.chdir(directory)
+
+inv_list = []
+for file in os.listdir(directory):
+    if not file.endswith(".pdf"):
+        continue
+    with open(os.path.join(directory,file), 'rb') as pdfFileObj:  # Changes here
+        with pdfplumber.open(file) as pdf:
+            page = pdf.pages[0]
+            text = page.extract_text()
+            doc_type = re.search("(?P<doc_type>\S+) # ", text).group("doc_type")
+            if doc_type == "INVOICE" or doc_type == "MEMO":
+                date = re.search("DATE (?P<date>[^\n]+)", text).group("date")
+                date = datetime.strptime(date, '%b %d, %Y').strftime('%d/%m/%Y')
+                inv_no = re.search(" # (?P<inv_no>\S+)", text).group("inv_no")
+                amount = re.search("TOTAL AMOUNT (?P<amount>\S+)", text).group("amount")
+                descr = re.search("DESCRIPTION / MEMO AMOUNT\n(?P<descr>[^\n]+)", text).group("descr")
+                invoice = (doc_type, date, inv_no, amount, descr)
+                inv_list.append(invoice)
+                
+df = pd.DataFrame(inv_list,columns =['Doc_Type', 'Date', 'Doc_No', 'Amount', 'Description'])
+df.to_excel('Mapola - Upwork.xlsx', encoding='utf-8', index=False)
