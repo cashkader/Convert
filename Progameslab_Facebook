@@ -1,0 +1,27 @@
+import pdfplumber, os, re, pandas as pd
+from datetime import datetime
+
+directory = 
+os.chdir(directory)
+
+inv_list = []
+for file in os.listdir(directory):
+    if not file.endswith(".pdf"):
+        continue
+    with open(os.path.join(directory,file), 'rb') as pdfFileObj:  # Changes here
+        with pdfplumber.open(file) as pdf:
+            page = pdf.pages[0]
+            text = page.extract_text()           
+            try:
+                date = re.search("Invoice/payment date\n(?P<date>[^\n]+),", text).group("date")
+                date = datetime.strptime(date, '%d %b %Y').strftime('%d/%m/%Y')
+                ref = re.search("Reference number: (?P<ref>\S+)", text).group("ref")
+                amount = re.search("Visa · 0000 €(?P<amount>\S+)", text).group("amount")
+                invoice = (date, ref, amount)
+                inv_list.append(invoice)
+            except AttributeError:
+                pass
+
+df = pd.DataFrame(inv_list,columns =['Date', 'Doc No', 'Amount'])
+
+df.to_excel('Progameslab - Facebook.xlsx', encoding='utf-8', index=False)
