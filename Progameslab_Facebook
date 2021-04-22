@@ -23,5 +23,4 @@ for file in os.listdir(directory):
                 pass
 
 df = pd.DataFrame(inv_list,columns =['Date', 'Doc No', 'Amount'])
-
 df.to_excel('Progameslab - Facebook.xlsx', encoding='utf-8', index=False)
