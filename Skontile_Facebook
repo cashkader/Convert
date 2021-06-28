@@ -1,0 +1,25 @@
+import pdfplumber, os, re, pandas as pd
+from datetime import datetime
+
+directory = r''
+os.chdir(directory)
+
+inv_list = []
+for file in os.listdir(directory):
+    if not file.endswith(".pdf"):
+        continue
+    with open(os.path.join(directory,file), 'rb') as pdfFileObj:  # Changes here
+        with pdfplumber.open(file) as pdf:
+            page = pdf.pages[0]
+            text = page.extract_text()
+            date = re.search("(?P<date>[^\n]+, 2021), ", text).group("date")
+            date = datetime.strptime(date, '%B %d, %Y').strftime('%d/%m/%Y').lstrip("0").replace(" 0", " ")
+            inv_no = re.search("\n(?P<inv_no>\S+)\nProduct Type", text).group("inv_no")
+            amount = re.search("(?P<amount>\S+) USD", text).group("amount")
+            invoice = (date, amount, inv_no)
+            inv_list.append(invoice)
+                
+print(inv_list)
+
+df = pd.DataFrame(inv_list,columns =['Date', 'Amount', 'Doc_No'])
+df.to_excel('Skontile - Facebook.xlsx', encoding='utf-8', index=False)
