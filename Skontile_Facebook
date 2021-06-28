@@ -13,7 +13,7 @@ for file in os.listdir(directory):
             page = pdf.pages[0]
             text = page.extract_text()
             date = re.search("(?P<date>[^\n]+, 2021), ", text).group("date")
-            date = datetime.strptime(date, '%B %d, %Y').strftime('%d/%m/%Y').lstrip("0").replace(" 0", " ")
+            date = datetime.strptime(date, '%b %d, %Y').strftime('%d/%m/%Y').lstrip("0").replace(" 0", " ")
             inv_no = re.search("\n(?P<inv_no>\S+)\nProduct Type", text).group("inv_no")
             amount = re.search("(?P<amount>\S+) USD", text).group("amount")
             invoice = (date, amount, inv_no)
