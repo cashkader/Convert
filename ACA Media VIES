@@ -1,0 +1,21 @@
+import os
+import pandas as pd
+
+directory = r'Y:\LSTS Consultants Limited\Clients accounting\A\ACA MEDIA\2021\2. Bank statements\11. November\VAT Invoices - November 2021'
+os.chdir(directory)
+
+total_rows = 160
+df = pd.read_excel('VIES XML November.xlsx', sheet_name='taxisnet', columns =['Country', 'VAT_No', 'Amount'])
+
+# Create the xml text
+xml_text = ''
+for i in range(total_rows):
+    temp = f"""<mof:row number="{total_rows - i}">
+<mof:vat-number country="{df.loc[total_rows-i-1,'Country']}">{df.loc[total_rows-i-1,'VAT_No']}</mof:vat-number>
+<mof:supplies-amount />
+<mof:triangle-transactions-amount />
+<mof:services-amount>{df.loc[total_rows-i-1,'Amount']}</mof:services-amount>
+</mof:row>\n"""
+    xml_text += temp
+    
+print(xml_text)
