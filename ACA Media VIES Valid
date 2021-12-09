@@ -1,0 +1,31 @@
+import pandas as pd, os, time
+from selenium import webdriver
+
+directory = r'Y:\LSTS Consultants Limited\Clients accounting\A\ACA MEDIA\2021\2. Bank statements\11. November\VAT Invoices - November 2021'
+os.chdir(directory)
+df = pd.read_excel('VIES XML November.xlsx', sheet_name='taxisnet', columns =['Country', 'VAT_No', 'Amount'])
+total_rows = len(df.index)
+
+os.chdir(r'C:\Users\lstsuser03\Documents\My Python Projects')
+driver = webdriver.Chrome(executable_path=r'C:\Users\lstsuser03\Documents\My Python Projects\chromedriver.exe')
+url = 'https://ec.europa.eu/taxation_customs/vies/vatRequest.html'
+
+state = '//*[@id="countryCombobox"]'
+number = '//*[@id="number"]'
+verify = '//*[@id="submit"]'
+valid_codes = []
+
+for i in range (92,total_rows):
+    driver.get(url)
+    driver.find_element_by_xpath(number).click()
+    driver.find_element_by_xpath(number).send_keys(df.loc[i,'VAT_No'])
+    driver.find_element_by_xpath(state).click()
+    driver.find_element_by_xpath(state).send_keys(df.loc[i,'Country'])
+    driver.find_element_by_xpath(state).click()
+    time.sleep(2)
+    driver.find_element_by_xpath(verify).click()
+    valid = driver.find_element_by_xpath("""//*[@id="tic-content"]/div[2]/b/span""").text
+    valid_codes.append(valid)
+    
+df2 = pd.DataFrame(valid_codes)
+df2.to_excel('valid.xlsx', encoding='utf-8', index=False)
