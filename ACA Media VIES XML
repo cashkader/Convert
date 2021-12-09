@@ -4,8 +4,8 @@ import pandas as pd
 directory = r'Y:\LSTS Consultants Limited\Clients accounting\A\ACA MEDIA\2021\2. Bank statements\11. November\VAT Invoices - November 2021'
 os.chdir(directory)
 
-total_rows = 160
 df = pd.read_excel('VIES XML November.xlsx', sheet_name='taxisnet', columns =['Country', 'VAT_No', 'Amount'])
+total_rows = len(df.index)
 
 # Create the xml text
 xml_text = ''
