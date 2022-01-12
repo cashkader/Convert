@@ -15,7 +15,7 @@ number = '//*[@id="number"]'
 verify = '//*[@id="submit"]'
 valid_codes = []
 
-for i in range (92,total_rows):
+for i in range (total_rows):
     driver.get(url)
     driver.find_element_by_xpath(number).click()
     driver.find_element_by_xpath(number).send_keys(df.loc[i,'VAT_No'])
