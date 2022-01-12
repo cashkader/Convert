@@ -13,12 +13,15 @@ for file in os.listdir(directory):
             page = pdf.pages[0]
             text = page.extract_text()
             doc_type = re.search("(?P<doc_type>\S+) # ", text).group("doc_type")
-            if doc_type == "INVOICE" or doc_type == "MEMO":
+            if doc_type == "INVOICE" or doc_type == "MEMO" or doc_type == "RECEIPT":
                 date = re.search("DATE (?P<date>[^\n]+)", text).group("date")
                 date = datetime.strptime(date, '%b %d, %Y').strftime('%d/%m/%Y')
                 inv_no = re.search(" # (?P<inv_no>\S+)", text).group("inv_no")
                 amount = re.search("TOTAL AMOUNT (?P<amount>\S+)", text).group("amount")
-                descr = re.search("DESCRIPTION / MEMO AMOUNT\n(?P<descr>[^\n]+)", text).group("descr")
+                try:
+                    descr = re.search("DESCRIPTION / MEMO AMOUNT\n(?P<descr>[^\n]+)", text).group("descr")
+                except AttributeError:
+                    descr = "Receipt"
                 invoice = (doc_type, date, inv_no, amount, descr)
                 inv_list.append(invoice)
                 
