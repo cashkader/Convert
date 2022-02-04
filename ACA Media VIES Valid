@@ -1,12 +1,12 @@
 import pandas as pd, os, time
 from selenium import webdriver
 
-directory = r'Y:\LSTS Consultants Limited\Clients accounting\A\ACA MEDIA\2021\2. Bank statements\11. November\VAT Invoices - November 2021'
+directory = r''
 os.chdir(directory)
-df = pd.read_excel('VIES XML November.xlsx', sheet_name='taxisnet', columns =['Country', 'VAT_No', 'Amount'])
+df = pd.read_excel('VIES XML.xlsx', sheet_name='taxisnet', columns =['Country', 'VAT_No', 'Amount'])
 total_rows = len(df.index)
 
-os.chdir(r'C:\Users\lstsuser03\Documents\My Python Projects')
+os.chdir(r'')
 driver = webdriver.Chrome(executable_path=r'C:\Users\lstsuser03\Documents\My Python Projects\chromedriver.exe')
 url = 'https://ec.europa.eu/taxation_customs/vies/vatRequest.html'
 
